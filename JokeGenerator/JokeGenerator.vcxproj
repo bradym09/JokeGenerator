@@ -140,9 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="JokeGenerator.cpp" />
+    <ClCompile Include="jsoncpp-master\dist\jsoncpp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="reddit_jokes.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="jsoncpp-master\dist\json\json-forwards.h" />
+    <ClInclude Include="jsoncpp-master\dist\json\json.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
