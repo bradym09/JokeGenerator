@@ -27,7 +27,10 @@ private:
 	}
 public:
 	
-
+	void print() {
+		cout << title << endl;
+		cout << body << endl;
+	}
 
 	Joke() {
 		// Shouldn't ever need this
@@ -46,13 +49,28 @@ public:
 	}
 };
 
+//Checking for valid sorting criteria (Current types are id, score, title length, and total length)
+//									  ^ Feel free to change these
+bool validType(string type) {
+	if (type == "id" || type == "score" || type == "type" || type == "total")
+		return true;
+	return false;
+}
+
+//Checking for valid sorting direction
+bool validDirection(string direction) {
+	if (direction == "ascending" || direction == "descending")
+		return true;
+	return false;
+}
+
 // Implementation of Shell Sort
-void shellSort(vector<Joke> jokes) {
+void shellSort(vector<Joke>& jokes) {
 
 }
 
 // Implementation of Shell Sort
-void mergeSort(vector<Joke> jokes) {
+void mergeSort(vector<Joke>& jokes) {
 
 }
 
@@ -83,10 +101,83 @@ int main() {
 
 	do {
 
+		//Getting one or two priorites from user
+		cout << "Would you like to sort with 1 or 2 priorities? ";
+		int priorityCount;
+		cin >> priorityCount;
+
+		cout << "Great! " << priorityCount << " it is.\n";
+
+
+		//Getting type and directions
+		vector<pair<string, string>> priorities;
+		for (int i = 0; i < priorityCount; i++) {
+
+			string type, direction;
+
+			//Loop until valid type and direction are given
+			do {
+				cout << "Please type how you would like to sort and specify ascending/descending separated by a space\n";
+				cout << "Sorting options: id, score, title, total (title and total are lengths)\n";
+
+				cin >> type;
+				cin >> direction;
+
+			} while (!validType(type) || !validDirection(direction));
+			
+			priorities.push_back({ type, direction });
+		}
+
+
+		//Determine sorting method
+		string sort;
+
+		do {
+			cout << "Would you like to use a shell or merge sort? (s/m) ";
+			cin >> sort;
+		} while (!(sort == "s" || sort == "m"));
+
+		if (sort == "s")
+			shellSort(jokes);
+		else
+			mergeSort(jokes);
 		
+		cout << "Jokes have been sorted!\n";
+
+
+		//Printing jokes
+		string printing;
+
+		do {
+			string index;
+
+			//Loop for valid input
+			do {
+				cout << "Please choose a joke index (1-" << root.size() << ") or enter 'R' for a random joke ";
+				cin >> index;
+			} while (!((stoi(index) > 1 && stoi(index) < root.size()) || index == "R"));
+
+			//Print the joke
+			if (index == "R") {
+				//Print random joke
+			}
+			else
+				jokes[stoi(index) - 1].print();
+
+			//Ask the user if they want to print another joke
+			cout << "Would you like to print another joke? (y/n) ";
+			cin >> printing;
+			
+		} while (printing == "y");
+
+
+		//Ask the user if they want to sort again
+		cout << "Would you like to use the Reddit Joke Generator again? (y/n) ";
+		cin >> repeat;
 
 	} while (repeat == 'y');
 
-	
+	cout << "Thank you for using the Reddit Joke Generator! Goodbye!\n";
+
 	return 0;
 }
