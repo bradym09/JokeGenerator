@@ -47,12 +47,12 @@ public:
 };
 
 // Implementation of Shell Sort
-void shellSort(Joke jokes[]) {
+void shellSort(vector<Joke> jokes) {
 
 }
 
 // Implementation of Shell Sort
-void mergeSort(Joke jokes[]) {
+void mergeSort(vector<Joke> jokes) {
 
 }
 
@@ -68,11 +68,18 @@ int main() {
 	vector<Joke> jokes;
 	
 
-	cout << root.size();
+	cout << root.size() << endl;
+
+	//Filling the jokes vector
+	for (int i = 0; i < root.size(); i++) {
+		Joke joke = Joke(root[i]["id"].asString(), root[i]["title"].asString(),
+			root[i]["body"].asString(), root[i]["score"].asInt());
+		jokes.push_back(joke);
+	}
 
 	cout << "Welcome to the Reddit Joke Generator\n";
 
-	char repeat;
+	char repeat = 'n';
 
 	do {
 
