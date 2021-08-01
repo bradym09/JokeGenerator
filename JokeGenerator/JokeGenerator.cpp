@@ -95,6 +95,8 @@ int main() {
 		jokes.push_back(joke);
 	}
 
+	jokes[0].print();
+
 	cout << "Welcome to the Reddit Joke Generator\n";
 
 	char repeat = 'n';
@@ -155,11 +157,12 @@ int main() {
 			do {
 				cout << "Please choose a joke index (1-" << root.size() << ") or enter 'R' for a random joke ";
 				cin >> index;
-			} while (!((stoi(index) > 1 && stoi(index) < root.size()) || index == "R"));
+			} while (!(index == "R" || (stoi(index) > 1 && stoi(index) < root.size())));
 
 			//Print the joke
 			if (index == "R") {
 				//Print random joke
+				jokes[rand() % root.size()].print();
 			}
 			else
 				jokes[stoi(index) - 1].print();
