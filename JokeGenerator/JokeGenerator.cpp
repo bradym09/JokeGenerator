@@ -8,6 +8,7 @@
 #include "jsoncpp-master/include/json/json.h"
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -56,12 +57,21 @@ void mergeSort(Joke jokes[]) {
 }
 
 int main() {
+	// Initializing the necessary classes
+	Json::Value root;
+	Json::Reader read;
 
-	//ifstream f("reddit_jokes.json");
-	//File name: "reddit_jokes.json"
+	//Reading the json object
+	string fileName = "reddit_jokes.json";
+	ifstream file(fileName);
+	file >> root;
+	vector<Joke> jokes;
+	
+
+	cout << root.size();
 
 	cout << "Welcome to the Reddit Joke Generator\n";
-	
+
 	char repeat;
 
 	do {
@@ -70,5 +80,6 @@ int main() {
 
 	} while (repeat == 'y');
 
+	
 	return 0;
 }
