@@ -32,6 +32,18 @@ public:
 		cout << body << endl;
 	}
 
+	//Returns string version of priority type (parameter is the priority type the user entered ex. score or id)
+	string getPriorityValue(string priority) {
+		if (priority == "score")
+			return score + "";
+		else if (priority == "title")
+			return titleSize + "";
+		else if (priority == "total")
+			return (titleSize + bodySize) + "";
+		else
+			return id;
+	}
+
 	Joke() {
 		// Shouldn't ever need this
 		// Setting the 
@@ -65,8 +77,30 @@ bool validDirection(string direction) {
 }
 
 // Implementation of Shell Sort
-void shellSort(vector<Joke>& jokes) {
+void shellSort(vector<Joke>& jokes, vector<pair<string, string>> priorities) {
+	for (int i = 0; i < priorities.size(); i++) {
+		double gap = jokes.size() / 2.0;
+		while (gap > 0) {
+			for (int j = 0; j + gap < jokes.size(); j++) {
+				
+				//Sorting first priority
+				if (i == 0) {
+					if (priorities[i].second == "ascending" && jokes[j].getPriorityValue(priorities[i].first) > jokes[j + gap].getPriorityValue(priorities[i].first))
+						swap(jokes[j], jokes[j + gap]);
+					else if (jokes[j].getPriorityValue(priorities[i].first) < jokes[j + gap].getPriorityValue(priorities[i].first))
+						swap(jokes[j], jokes[j + gap]);
+				}
+				else if (i == 1) {
+					
+				}
+			}
 
+			if (gap == 2)
+				gap = 1;
+			else
+				gap /= 2.2;
+		}
+	}
 }
 
 // Implementation of Shell Sort
@@ -97,7 +131,7 @@ int main() {
 
 	jokes[0].print();
 
-	cout << "Welcome to the Reddit Joke Generator\n";
+	cout << "Welcome to the Reddit Joke Generator\nDISCLAIMER: These jokes were not written by the creators of the program and some may be seen as inappropriate\n";
 
 	char repeat = 'n';
 
@@ -140,7 +174,7 @@ int main() {
 		} while (!(sort == "s" || sort == "m"));
 
 		if (sort == "s")
-			shellSort(jokes);
+			shellSort(jokes, priorities);
 		else
 			mergeSort(jokes);
 		
