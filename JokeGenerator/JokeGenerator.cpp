@@ -141,34 +141,23 @@ int main() {
 
 	do {
 
-		//Getting one or two priorites from user
-		cout << "Would you like to sort with 1 or 2 priorities? ";
-		int priorityCount;
-		cin >> priorityCount;
-
-		cout << "Great! " << priorityCount << " it is.\n";
-
-
 		//Getting type and directions
 		vector<pair<string, string>> priorities;
-		for (int i = 0; i < priorityCount; i++) {
+		string type, direction;
 
-			string type, direction;
+		//Loop until valid type and direction are given
+		do {
+			cout << "Please type how you would like to sort and specify ascending/descending separated by a space\n";
+			cout << "Sorting options: id, score, title, total (title and total are lengths)\n";
 
-			//Loop until valid type and direction are given
-			do {
-				cout << "Please type how you would like to sort and specify ascending/descending separated by a space\n";
-				cout << "Sorting options: id, score, title, total (title and total are lengths)\n";
+			cin >> type;
+			cin >> direction;
 
-				cin >> type;
-				cin >> direction;
+			cout << endl;
 
-				cout << endl;
-
-			} while (!validType(type) || !validDirection(direction));
+		} while (!validType(type) || !validDirection(direction));
 			
-			priorities.push_back({ type, direction });
-		}
+		priorities.push_back({ type, direction });
 
 
 		//Shell sort
@@ -205,7 +194,7 @@ int main() {
 			do {
 				cout << "Please choose a joke index (1-" << root.size() << ") or enter 'R' for a random joke ";
 				cin >> index;
-			} while (!(index == "R" || (stoi(index) > 1 && stoi(index) < root.size())));
+			} while (!(index == "R" || (stoi(index) >= 1 && stoi(index) < root.size())));
 
 			//Print the joke
 			if (index == "R") {
