@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -35,11 +36,11 @@ public:
 	//Returns string version of priority type (parameter is the priority type the user entered ex. score or id)
 	string getPriorityValue(string priority) {
 		if (priority == "score")
-			return score + "";
+			return to_string(score);
 		else if (priority == "title")
-			return titleSize + "";
+			return to_string(titleSize);
 		else if (priority == "total")
-			return (titleSize + bodySize) + "";
+			return to_string(titleSize + bodySize);
 		else
 			return id;
 	}
@@ -64,7 +65,7 @@ public:
 //Checking for valid sorting criteria (Current types are id, score, title length, and total length)
 //									  ^ Feel free to change these
 bool validType(string type) {
-	if (type == "id" || type == "score" || type == "type" || type == "total")
+	if (type == "id" || type == "score" || type == "title" || type == "total")
 		return true;
 	return false;
 }
@@ -79,7 +80,7 @@ bool validDirection(string direction) {
 // Implementation of Shell Sort
 void shellSort(vector<Joke>& jokes, vector<pair<string, string>> priorities) {
 	for (int i = 0; i < priorities.size(); i++) {
-		double gap = jokes.size() / 2.0;
+		int gap = jokes.size() / 2;
 		while (gap > 0) {
 			for (int j = 0; j + gap < jokes.size(); j++) {
 				
@@ -90,8 +91,15 @@ void shellSort(vector<Joke>& jokes, vector<pair<string, string>> priorities) {
 					else if (jokes[j].getPriorityValue(priorities[i].first) < jokes[j + gap].getPriorityValue(priorities[i].first))
 						swap(jokes[j], jokes[j + gap]);
 				}
+				
+				//Sorting second priority
 				else if (i == 1) {
-					
+					if (jokes[j].getPriorityValue(priorities[0].first) == jokes[j + gap].getPriorityValue(priorities[0].first)) {
+						if (priorities[i].second == "ascending" && jokes[j].getPriorityValue(priorities[i].first) > jokes[j + gap].getPriorityValue(priorities[i].first))
+							swap(jokes[j], jokes[j + gap]);
+						else if (jokes[j].getPriorityValue(priorities[i].first) < jokes[j + gap].getPriorityValue(priorities[i].first))
+							swap(jokes[j], jokes[j + gap]);
+					}
 				}
 			}
 
@@ -109,6 +117,9 @@ void mergeSort(vector<Joke>& jokes) {
 }
 
 int main() {
+
+	cout << "Loading File...\n";
+
 	// Initializing the necessary classes
 	Json::Value root;
 	Json::Reader read;
@@ -120,7 +131,7 @@ int main() {
 	vector<Joke> jokes;
 	
 
-	cout << root.size() << endl;
+	//cout << root.size() << endl;
 
 	//Filling the jokes vector
 	for (int i = 0; i < root.size(); i++) {
@@ -129,9 +140,7 @@ int main() {
 		jokes.push_back(joke);
 	}
 
-	jokes[0].print();
-
-	cout << "Welcome to the Reddit Joke Generator\nDISCLAIMER: These jokes were not written by the creators of the program and some may be seen as inappropriate\n";
+	cout << "Welcome to the Reddit Joke Generator\nDISCLAIMER: These jokes were not written by the creators of the program and some may be seen as inappropriate\n\n";
 
 	char repeat = 'n';
 
@@ -159,26 +168,36 @@ int main() {
 				cin >> type;
 				cin >> direction;
 
+				cout << endl;
+
 			} while (!validType(type) || !validDirection(direction));
 			
 			priorities.push_back({ type, direction });
 		}
 
 
-		//Determine sorting method
-		string sort;
+		//Shell sort
+		vector<Joke> shell = jokes;
 
-		do {
-			cout << "Would you like to use a shell or merge sort? (s/m) ";
-			cin >> sort;
-		} while (!(sort == "s" || sort == "m"));
+		auto start = chrono::high_resolution_clock::now();
+		shellSort(shell, priorities);
+		auto stop = chrono::high_resolution_clock::now();
 
-		if (sort == "s")
-			shellSort(jokes, priorities);
-		else
-			mergeSort(jokes);
+		chrono::duration<double> shellTime = stop - start;
+		cout << "Shell Sort Time: " << shellTime.count() << endl;
+
+		//Merge Sort
+		vector<Joke> merge = jokes;
+
+		start = chrono::high_resolution_clock::now();
+		mergeSort(merge);
+		stop = chrono::high_resolution_clock::now();
+
+		chrono::duration<double> mergeTime = stop - start;
+		cout << "Merge Sort Time: " << mergeTime.count() << endl;
 		
-		cout << "Jokes have been sorted!\n";
+
+		cout << "Jokes have been sorted!\n\n";
 
 
 		//Printing jokes
@@ -196,14 +215,15 @@ int main() {
 			//Print the joke
 			if (index == "R") {
 				//Print random joke
-				jokes[rand() % root.size()].print();
+				shell[rand() % root.size()].print();
 			}
 			else
-				jokes[stoi(index) - 1].print();
+				shell[stoi(index) - 1].print();
 
 			//Ask the user if they want to print another joke
 			cout << "Would you like to print another joke? (y/n) ";
 			cin >> printing;
+			cout << endl;
 			
 		} while (printing == "y");
 
@@ -211,6 +231,9 @@ int main() {
 		//Ask the user if they want to sort again
 		cout << "Would you like to use the Reddit Joke Generator again? (y/n) ";
 		cin >> repeat;
+		cout << endl;
+
+		priorities.clear();
 
 	} while (repeat == 'y');
 
