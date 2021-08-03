@@ -77,7 +77,7 @@ bool validDirection(string direction) {
 	return false;
 }
 
-// Implementation of Shell Sort
+//Implementation of Shell Sort (General layout of the algorithm comes from the second set of lecture slides for Module 6: Sorting)
 void shellSort(vector<Joke>& jokes, vector<pair<string, string>> priorities) {
 	for (int i = 0; i < priorities.size(); i++) {
 		int gap = jokes.size() / 2;
