@@ -4,7 +4,6 @@
  * Project 3: Reddit Joke Generator
  * * * * * * * * * * * * * * * * * * */
 
-//#include "jsoncpp-master/dist/json/json.h" <- didn't exist
 #include "jsoncpp-master/include/json/json.h"
 #include <iostream>
 #include <fstream>
@@ -63,7 +62,6 @@ public:
 };
 
 //Checking for valid sorting criteria (Current types are id, score, title length, and total length)
-//									  ^ Feel free to change these
 bool validType(string type) {
 	if (type == "id" || type == "score" || type == "title" || type == "total")
 		return true;
@@ -129,9 +127,6 @@ int main() {
 	ifstream file(fileName);
 	file >> root;
 	vector<Joke> jokes;
-	
-
-	//cout << root.size() << endl;
 
 	//Filling the jokes vector
 	for (int i = 0; i < root.size(); i++) {
