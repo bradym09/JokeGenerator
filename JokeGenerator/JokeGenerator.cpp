@@ -109,9 +109,94 @@ void shellSort(vector<Joke>& jokes, vector<pair<string, string>> priorities) {
 	}
 }
 
-// Implementation of Shell Sort
-void mergeSort(vector<Joke>& jokes) {
+//Implementing merge sort
+void merge(vector<Joke>& jokes, int start, int middle, int end, bool isAscending, string type) {
+	//inspiration taken from Aman's powerpoint sorting-2
+	int first = middle - start + 1;
+	int second = end - middle;
 
+	vector<Joke> half1;
+	vector<Joke> half2;
+
+	//combining the split vectors
+	int t1 = 0;
+	int t2 = 0;
+	for (int ii = 0; ii < first; ii++) {
+		t1 = ii + start;
+		half1.push_back(jokes.at(t1));
+	}
+	for (int jj = 0; jj < second; jj++) {
+		t2 = jj + middle + 1;
+		half2.push_back(jokes.at(t2));
+	}
+
+	int p1 = 0;
+	int p2 = 0;
+
+	//sorting the 2 split vectors while combining them
+	while ((p1 < half1.size()) && (p2 < half2.size())) {
+		if (half1.at(p1).getPriorityValue(type) <= half2.at(p2).getPriorityValue(type)) {
+			if (isAscending) {
+				
+				jokes.at(start) = half1.at(p1);
+				p1++;
+			}
+			else {
+				
+				jokes.at(start) = half2.at(p2);
+				p2++;
+			}
+			start++;
+		}
+		else {
+			if (isAscending) {
+				
+				jokes.at(start) = half2.at(p2);
+				p2++;
+			}
+			else {
+				
+				jokes.at(start) = half1.at(p1);
+				p1++;
+			}
+			start++;
+		}
+	}
+
+	while (p1 < half1.size()) {
+		jokes.at(start) = half1.at(p1);
+		p1++;
+		start++;
+	}
+
+	while (p2 < half2.size()) {
+		jokes.at(start) = half2.at(p2);
+		p2++;
+		start++;
+	}
+}
+
+void mergeSortRec(vector<Joke>& jokes, int start, int end, bool isAscending, string type) {
+	//inspiration taken from Aman's powerpoint sorting-2
+
+	//Keeps recursively splitting and then combines at the end
+	if (start < end) {
+		
+		int middle = start + (end - start) / 2;
+		mergeSortRec(jokes, start, middle, isAscending, type);
+		mergeSortRec(jokes, middle + 1, end, isAscending, type);
+		merge(jokes, start, middle, end, isAscending, type);
+	}
+}
+
+void mergeSortTotal(vector<Joke>& jokes, vector<pair<string, string>> priorities) {
+	//determines the ascending or descending of the list
+	if (priorities.at(0).second == "ascending") {
+		mergeSortRec(jokes, 0, ((int)jokes.size() - 1), true, priorities.at(0).first);
+	}
+	else {
+		mergeSortRec(jokes, 0, ((int)jokes.size() - 1), false, priorities.at(0).first);
+	}
 }
 
 int main() {
@@ -174,7 +259,7 @@ int main() {
 		vector<Joke> merge = jokes;
 
 		start = chrono::high_resolution_clock::now();
-		mergeSort(merge);
+		mergeSortTotal(merge, priorities);
 		stop = chrono::high_resolution_clock::now();
 
 		chrono::duration<double> mergeTime = stop - start;
